@@ -33,6 +33,11 @@ function Menu() {
                   Formulario
                 </Link>
               </li>
+              <li class="nav-item">
+                <Link class="nav-link" to='/descripcion'>
+                  Descripcion
+                </Link>
+              </li>
               <li class="nav-item dropdown">
                 <a
                   class="nav-link dropdown-toggle"
