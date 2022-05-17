@@ -1,16 +1,23 @@
-import { toHaveFormValues } from "@testing-library/jest-dom/dist/matchers";
-import React,{useState} from "react";
+
+import React,{useState, useEffect} from "react";
 //import { Link } from "react-router-dom";
 import AxiosC from "../../servicios/AxiosC";
+
+import {useNavigate, useParams} from 'react-router-dom';
+
 
 
 function Formulario() {
   
   const datosEntrada={
+    _id:"",
     nombre:"",
     apellidos:"",
     direccion:""
   }
+
+  const navigate=useNavigate();
+  const params=useParams();
 
   const[listaD, setListaD]=useState(datosEntrada);
 
@@ -27,12 +34,39 @@ const GuardarBD=async()=>{
   }).then ((res)=>{
     console.log(res.data);
   })
+  navigate('/descripcion');
+}
+
+const ActualizarPersonal=async()=>{
+  await AxiosC.put(`/personal/actualizarPersonal/${params.id}`,{
+    nombre: listaD.nombre,
+    apellidos: listaD.apellidos,
+    direccion: listaD.direccion
+  }).then((res)=>{
+    console.log(res.data);
+  });
+  navigate('/descripcion');
+}
+
+const listarUnPersonal=async(id)=>{
+  const respuestaC=await AxiosC.get(`/personal/consultarUno/${id}`);
+  setListaD(respuestaC.data);
 }
 
   const Enviar=(e)=>{
     e.preventDefault();
-    GuardarBD();
+
+    if(listaD._id===""){
+      GuardarBD();
+    }else{
+      ActualizarPersonal();
+    }
+    
   }
+
+  useEffect(()=>{
+    listarUnPersonal(params.id);
+  }, [params.id])
 
 
   return (
@@ -85,7 +119,7 @@ const GuardarBD=async()=>{
         </div>
         <div className="col-12">
             <button type="submit" className="btn btn-primary">
-              Guardar
+              {listaD._id===""?"Guardar":"Actualizar"}
             </button>
           </div>
       </form>

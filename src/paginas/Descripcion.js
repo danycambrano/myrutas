@@ -1,8 +1,13 @@
 import React, { useState, useEffect } from "react";
 import AxiosC from "../servicios/AxiosC";
 
+import {useNavigate} from 'react-router-dom';
+
+
 function Descripcion() {
   const [personal, setPersonal] = useState([]);
+
+  const navigate=useNavigate();
 
   const consultarPersonal = async () => {
     const consultarp = await AxiosC.get("/personal/consultarPersonal");
@@ -33,6 +38,7 @@ function Descripcion() {
             <th scope="col">Apellidos</th>
             <th scope="col">Direccion</th>
             <th scope="col">Eliminar</th>
+            <th scope="col">Editar</th>
           </tr>
         </thead>
         <tbody>
@@ -44,6 +50,7 @@ function Descripcion() {
                 <td>{persona.apellidos}</td>
                 <td>{persona.direccion}</td>
                 <td><button onClick={()=>EliminarPersonal(persona._id)} >Eliminar</button></td>
+                <td><button onClick={()=>navigate(`/formulario/${persona._id}`)} >Editar</button></td>
               </tr>
             );
           })}
